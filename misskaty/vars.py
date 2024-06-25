@@ -52,7 +52,7 @@ SUDO = list(
 )
 SUPPORT_CHAT = environ.get("SUPPORT_CHAT", "YasirPediaChannel")
 AUTO_RESTART = environ.get("AUTO_RESTART", False)
-OPENAI_KEY = environ.get("OPENAI_KEY")
+SHUTTLEAI_KEY = environ.get("SHUTTLEAI_KEY")
 GOOGLEAI_KEY = environ.get("GOOGLEAI_KEY")
 
 ## Config For AUtoForwarder
