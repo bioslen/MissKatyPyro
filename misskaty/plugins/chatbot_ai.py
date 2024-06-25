@@ -6,7 +6,7 @@ import asyncio
 import html
 import random
 
-from openai import AsyncOpenAI, APIConnectionError, RateLimitError, APIStatusError
+from shuttleai import AsyncShuttleAI
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
@@ -14,7 +14,7 @@ from pyrogram.types import Message
 from misskaty import app
 from misskaty.core import pyro_cooldown
 from misskaty.helper import check_time_gap, fetch, post_to_telegraph, use_chat_lang
-from misskaty.vars import GOOGLEAI_KEY, COMMAND_HANDLER, OPENAI_KEY, SUDO
+from misskaty.vars import GOOGLEAI_KEY, COMMAND_HANDLER, SHUTTLEAI_KEY, SUDO
 
 
 __MODULE__ = "ChatBot"
@@ -59,20 +59,20 @@ async def openai_chatbot(_, ctx: Message, strings):
         return await ctx.reply_msg(
             strings("no_question").format(cmd=ctx.command[0]), quote=True, del_in=5
         )
-    if not OPENAI_KEY:
+    if not SHUTTLEAI_KEY:
         return await ctx.reply_msg("OPENAI_KEY env is missing!!!")
     uid = ctx.from_user.id if ctx.from_user else ctx.sender_chat.id
     is_in_gap, _ = await check_time_gap(uid)
     if is_in_gap and (uid not in SUDO):
         return await ctx.reply_msg(strings("dont_spam"), del_in=5)
-    ai = AsyncOpenAI(api_key=OPENAI_KEY)
+    ai = AsyncShuttleAI(SHUTTLEAI_KEY)
     pertanyaan = ctx.input
     msg = await ctx.reply_msg(strings("find_answers_str"), quote=True)
     num = 0
     answer = ""
     try:
         response = await ai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="shuttle-2-turbo",
             messages=[{"role": "user", "content": pertanyaan}],
             temperature=0.7,
             stream=True,
